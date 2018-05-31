@@ -14,24 +14,33 @@ export default class SpaceVR extends React.Component {
   state = {
     rotation: 90,
     zoomLevel: 1,
+    x: 0,
+    y: 0,
   }
 
   rotate = () => {
     this.setState({
       rotation: this.state.rotation + 1,
     })
-
     requestAnimationFrame(this.rotate)
   }
-
   zoom = (delta) => {
     this.setState({
       zoomLevel: this.state.zoomLevel + delta
     })
   }
 
+  orbit = () => {
+    this.setState({
+      x: this.state.x + 1,
+      y: this.state.y + 1
+    })
+    requestAnimationFrame(this.orbit)
+  }
+
   componentDidMount() {
     this.rotate()
+    this.orbit()
   }
 
   render() {
@@ -71,7 +80,11 @@ export default class SpaceVR extends React.Component {
         <Model
           style={{
             transform: [
-              {translate: [-25, 0, -70]},
+              {translate: [
+                Math.sin(this.state.x * .1) * 25,
+                Math.cos(this.state.y * .1) * 25,
+                -70
+              ]},
               {scale: 0.05 * this.state.zoomLevel},
               {rotateY: 90},
               {rotateX: this.state.rotation},
